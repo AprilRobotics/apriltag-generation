@@ -59,13 +59,10 @@ public class TagRenderer {
 
         int mosaicWidth = (int) Math.sqrt(ims.size());
         int mosaicHeight = ims.size() / mosaicWidth + (ims.size() % mosaicWidth != 0 ? 1 : 0);
-        int imageSize = layout.getSize();
+        int imageSize = layout.getSize() + 1;
 
-        BufferedImage im = new BufferedImage(mosaicWidth*imageSize, mosaicHeight*imageSize, BufferedImage.TYPE_INT_RGB);
+        BufferedImage im = new BufferedImage(mosaicWidth*imageSize - 1, mosaicHeight*imageSize - 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = im.createGraphics();
-
-        g.setColor(Color.white);
-        g.fillRect(0, 0, im.getWidth(), im.getHeight());
 
         for (int y = 0; y < mosaicHeight; y++) {
             for (int x = 0; x < mosaicWidth; x++) {
@@ -106,7 +103,7 @@ public class TagRenderer {
                 "  1.0 pagewidth mul dup scale                  \n" +
                 "  1 -1 scale                                   \n" +
                 "  -.5 -.5 translate                            \n" +
-                "  " + sz + " " + sz + " 1 [ " + sz + " 0 0 " + sz + " 0 0 ] { img } image \n" +
+                "  " + sz + " " + sz + " 2 [ " + sz + " 0 0 " + sz + " 0 0 ] { img } image \n" +
                 "  0 setlinewidth .5 setgray [0.002 0.01] 0 setdash \n" +
                 "  0 0 moveto 1 0 lineto 1 1 lineto 0 1 lineto  \n" +
                 "  closepath stroke                             \n" +
@@ -134,8 +131,21 @@ public class TagRenderer {
                 int vlen = 0;
 
                 for (int x = 0; x < sz; x++) {
-                    int b = ((im.getRGB(x, y)&0xffffff) > 0) ? 1 : 0;
-                    v = (v<<1) | b; vlen++;
+                    int b;
+                    switch (im.getRGB(x,y)) {
+                        case ImageLayout.BLACK:
+                            b = 3;
+                            break;
+                        case ImageLayout.WHITE:
+                            b = 0;
+                            break;
+                        case ImageLayout.TRANSPARENT:
+                            b = 2;
+                            break;
+                        default:
+                            throw new RuntimeException("Unknown color.");
+                    }
+                    v = (v<<2) + b; vlen += 2;
                 }
 
                 // pad to a byte boundary.
@@ -144,7 +154,6 @@ public class TagRenderer {
                 }
                 imgdata += String.format("%0"+(vlen/4)+"x", v);
             }
-
             outs.write("(" + tagFamilyName + ", id = "+id+") <"+imgdata+"> maketag\n");
         }
 

@@ -30,8 +30,9 @@ package april.tag;
 import java.awt.image.BufferedImage;
 
 public class ImageLayout {
-    private static final int WHITE = 0xffffff;
-    private static final int BLACK = 0x000000;
+    static final int WHITE = 0xffffffff;
+    static final int BLACK = 0xff000000;
+    static final int TRANSPARENT = 0x00000000;
     private String name;
     private int numBits;
     private int size;
@@ -169,10 +170,24 @@ public class ImageLayout {
     public BufferedImage renderToImage(long code) {
         int[][] imageData = renderToArray(code);
 
-        BufferedImage im = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+        BufferedImage im = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                im.setRGB(x, y, imageData[y][x] > 0 ? WHITE : BLACK);
+                int value;
+                switch(imageData[y][x]) {
+                    case 0:
+                        value = WHITE;
+                        break;
+                    case 1:
+                        value = BLACK;
+                        break;
+                    case 2:
+                        value = TRANSPARENT;
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown image pixel color.");
+                }
+                im.setRGB(x, y, value);
             }
         }
         return im;
