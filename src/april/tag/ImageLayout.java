@@ -176,10 +176,10 @@ public class ImageLayout {
                 int value;
                 switch(imageData[y][x]) {
                     case 0:
-                        value = WHITE;
+                        value = BLACK;
                         break;
                     case 1:
-                        value = BLACK;
+                        value = WHITE;
                         break;
                     case 2:
                         value = TRANSPARENT;
