@@ -11,6 +11,6 @@ $ java -cp april.jar april.tag.TagFamilyGenerator circle_9 7
 Then to generate the c code and tag images after copying the output into the source folder:
 ```
 $ ant
-$ java -cp april.jar april.tag.TagToC april.tag.Tag21h7
-$ java -cp april.jar april.tag.GenerateTags april.tag.TagStandard21h7 .
+$ java -cp april.jar april.tag.TagToC april.tag.TagCircle21h7
+$ java -cp april.jar april.tag.GenerateTags april.tag.TagCircle21h7 .
 ```
