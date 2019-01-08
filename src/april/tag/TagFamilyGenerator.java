@@ -257,15 +257,11 @@ public class TagFamilyGenerator
     }
 
     class ReportingThread extends Thread {
-        ReportingThread() {
-
-        }
-
         public void run() {
             long lastreporttime = System.currentTimeMillis();
             long lastNumCodes = 0;
 
-            while (true) {
+            while (!Thread.interrupted()) {
                 // print a partial report.
                 if ((System.currentTimeMillis() - lastreporttime > 60 * 60 * 1000) ||
                         (codelist.size() > 1.1*lastNumCodes && System.currentTimeMillis() - lastreporttime > 60*1000)) {
@@ -277,7 +273,7 @@ public class TagFamilyGenerator
                 try {
                     Thread.sleep(10*1000L);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
         }
@@ -426,6 +422,7 @@ public class TagFamilyGenerator
             }
         }
 
+        reportingThread.interrupt();
         pool.shutdown();
 
         long codes[] = new long[codelist.size()];
