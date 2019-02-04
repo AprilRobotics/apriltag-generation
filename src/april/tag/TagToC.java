@@ -44,6 +44,7 @@ public class TagToC
         String indent = "   ";
 
         String cname = String.format("tag%s%dh%d.c", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance);
+        String text_name = String.format("tag%s%dh%d", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance);
 
         BufferedWriter outs = new BufferedWriter(new FileWriter(cname));
 
@@ -52,6 +53,7 @@ public class TagToC
         outs.write(String.format("apriltag_family_t *tag%s%dh%d_create()\n", tf.getLayout().getName(),tf.getLayout().getNumBits(), tf.minimumHammingDistance));
         outs.write(String.format("{\n"));
         outs.write(String.format("%sapriltag_family_t *tf = calloc(1, sizeof(apriltag_family_t));\n", indent));
+        outs.write(String.format("%stf->name = strdup(\"%s\");\n", indent, text_name));
         outs.write(String.format("%stf->h = %d;\n", indent, tf.minimumHammingDistance));
         outs.write(String.format("%stf->ncodes = %d;\n", indent, tf.getCodes().length));
         outs.write(String.format("%stf->codes = calloc(%d, sizeof(uint64_t));\n", indent, tf.getCodes().length));
@@ -77,6 +79,7 @@ public class TagToC
         outs.write(String.format("%sfree(tf->codes);\n", indent));
         outs.write(String.format("%sfree(tf->bit_x);\n", indent));
         outs.write(String.format("%sfree(tf->bit_y);\n", indent));
+        outs.write(String.format("%sfree(tf->name);\n", indent));
         outs.write(String.format("%sfree(tf);\n", indent));
         outs.write(String.format("}\n"));
         outs.flush();
@@ -88,9 +91,12 @@ public class TagToC
         outs = new BufferedWriter(new FileWriter(hname));
         outs.write(String.format("#ifndef _TAG%s%dH%d\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
         outs.write(String.format("#define _TAG%s%dH%d\n\n",tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
+        outs.write(String.format("#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n"));
+
         outs.write(String.format("apriltag_family_t *tag%s%dh%d_create();\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
-        outs.write(String.format("void tag%s%dh%d_destroy(apriltag_family_t *tf);\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
-        outs.write(String.format("#endif"));
+        outs.write(String.format("void tag%s%dh%d_destroy(apriltag_family_t *tf);\n\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
+        outs.write(String.format("#ifdef __cplusplus\n}\n#endif\n\n"));
+        outs.write(String.format("#endif\n"));
         outs.flush();
         outs.close();
     }
