@@ -134,10 +134,10 @@ public class TagRenderer {
                     int b;
                     switch (im.getRGB(x,y)) {
                         case ImageLayout.BLACK:
-                            b = 3;
+                            b = 0;
                             break;
                         case ImageLayout.WHITE:
-                            b = 0;
+                            b = 3;
                             break;
                         case ImageLayout.TRANSPARENT:
                             b = 2;
