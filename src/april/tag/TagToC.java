@@ -55,7 +55,7 @@ public class TagToC
         outs.write(String.format("%sapriltag_family_t *tf = calloc(1, sizeof(apriltag_family_t));\n", indent));
         outs.write(String.format("%stf->name = strdup(\"%s\");\n", indent, text_name));
         outs.write(String.format("%stf->h = %d;\n", indent, tf.minimumHammingDistance));
-        int num_codes = Math.min(tf.getCodes().length, 65536);
+        int num_codes = Math.min(tf.getCodes().length, 65535);
         outs.write(String.format("%stf->ncodes = %d;\n", indent, num_codes));
         outs.write(String.format("%stf->codes = calloc(%d, sizeof(uint64_t));\n", indent, num_codes));
         for (int i = 0; i < num_codes; i++) {
