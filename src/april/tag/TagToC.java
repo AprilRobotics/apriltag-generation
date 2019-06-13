@@ -50,7 +50,7 @@ public class TagToC
 
         outs.write(String.format("#include <stdlib.h>\n"));
         outs.write(String.format("#include \"apriltag.h\"\n\n"));
-        outs.write(String.format("apriltag_family_t __attribute__((optimize(\"O0\"))) *tag%s%dh%d_create()\n", tf.getLayout().getName(),tf.getLayout().getNumBits(), tf.minimumHammingDistance));
+        outs.write(String.format("apriltag_family_t *tag%s%dh%d_create()\n", tf.getLayout().getName(),tf.getLayout().getNumBits(), tf.minimumHammingDistance));
         outs.write(String.format("{\n"));
         outs.write(String.format("%sapriltag_family_t *tf = calloc(1, sizeof(apriltag_family_t));\n", indent));
         outs.write(String.format("%stf->name = strdup(\"%s\");\n", indent, text_name));
