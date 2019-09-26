@@ -231,13 +231,28 @@ public class ImageLayout {
             }
         }
 
-        // If there is a middle data pixel, set it.
-        if (numBits % 4 == 1) {
+        // If there is a middle pixel, set it.
+        if (size % 2 == 1) {
             int color;
-            if ((code & (1L << (numBits - 1))) != 0) {
-                color = 1;
-            } else {
-                color = 0;
+            switch (pixels[size/2][size/2]) {
+                case DATA:
+                    if ((code & (1L << (numBits - 1))) != 0) {
+                        color = 1;
+                    } else {
+                        color = 0;
+                    }
+                    break;
+                case BLACK:
+                    color = 0;
+                    break;
+                case WHITE:
+                    color = 1;
+                    break;
+                case NOTHING:
+                    color = 2;
+                    break;
+                default:
+                    throw new RuntimeException("Impossible state");
             }
             im[size/2][size/2] = color;
         }
