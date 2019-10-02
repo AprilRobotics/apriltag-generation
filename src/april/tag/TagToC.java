@@ -49,7 +49,7 @@ public class TagToC
         BufferedWriter outs = new BufferedWriter(new FileWriter(cname));
 
         outs.write(String.format("#include <stdlib.h>\n"));
-        outs.write(String.format("#include \"apriltag.h\"\n\n"));
+        outs.write(String.format("#include \"tag%s%dh%d.h\"\n\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
         outs.write(String.format("apriltag_family_t *tag%s%dh%d_create()\n", tf.getLayout().getName(),tf.getLayout().getNumBits(), tf.minimumHammingDistance));
         outs.write(String.format("{\n"));
         outs.write(String.format("%sapriltag_family_t *tf = calloc(1, sizeof(apriltag_family_t));\n", indent));
@@ -92,6 +92,8 @@ public class TagToC
         outs = new BufferedWriter(new FileWriter(hname));
         outs.write(String.format("#ifndef _TAG%s%dH%d\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
         outs.write(String.format("#define _TAG%s%dH%d\n\n",tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
+        outs.write(String.format("#include \"apriltag.h\"\n\n"));
+
         outs.write(String.format("#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n"));
 
         outs.write(String.format("apriltag_family_t *tag%s%dh%d_create();\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
