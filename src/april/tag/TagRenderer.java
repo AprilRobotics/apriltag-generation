@@ -165,10 +165,10 @@ public class TagRenderer {
      * the first block is nbits, the second block is hamming distance,
      * and the final block is the id.
      **/
-    public void writeAllImages(String dirpath, String prefix) throws IOException
+    public void writeAllImages(String dirpath, String prefix, int scaleFactor) throws IOException
     {
         for (int i = 0; i < codes.length; i++) {
-            BufferedImage im = makeImage(i);
+            BufferedImage im = makeImage(i, scaleFactor);
             String fname = String.format("%s_%05d.png",
                     prefix,
                     i);
@@ -180,9 +180,14 @@ public class TagRenderer {
         }
     }
 
-    public BufferedImage makeImage(int id)
+    public BufferedImage makeImage(int id, int scaleFactor)
     {
         long v = codes[id];
-        return layout.renderToImage(v);
+        return layout.renderToImage(v, scaleFactor);
+    }
+
+    public BufferedImage makeImage(int id)
+    {
+        return makeImage(id, 1);
     }
 }
