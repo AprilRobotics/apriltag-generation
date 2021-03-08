@@ -50,17 +50,21 @@ public class TagToC
 
         outs.write(String.format("#include <stdlib.h>\n"));
         outs.write(String.format("#include \"tag%s%dh%d.h\"\n\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
+
+        int num_codes = Math.min(tf.getCodes().length, 65535);
+        outs.write(String.format("static uint64_t codedata[%d] = {\n", num_codes));
+        for (int i = 0; i < num_codes; i++) {
+            outs.write(String.format("%s0x%016xUL,\n", indent, tf.getCodes()[i]));
+        }
+        outs.write(String.format("};\n"));
+
         outs.write(String.format("apriltag_family_t *tag%s%dh%d_create()\n", tf.getLayout().getName(),tf.getLayout().getNumBits(), tf.minimumHammingDistance));
         outs.write(String.format("{\n"));
         outs.write(String.format("%sapriltag_family_t *tf = calloc(1, sizeof(apriltag_family_t));\n", indent));
         outs.write(String.format("%stf->name = strdup(\"%s\");\n", indent, text_name));
         outs.write(String.format("%stf->h = %d;\n", indent, tf.minimumHammingDistance));
-        int num_codes = Math.min(tf.getCodes().length, 65535);
         outs.write(String.format("%stf->ncodes = %d;\n", indent, num_codes));
-        outs.write(String.format("%stf->codes = calloc(%d, sizeof(uint64_t));\n", indent, num_codes));
-        for (int i = 0; i < num_codes; i++) {
-            outs.write(String.format("%stf->codes[%d] = 0x%016xUL;\n", indent, i, tf.getCodes()[i]));
-        }
+        outs.write(String.format("%stf->codes = codedata;\n", indent));
         outs.write(String.format("%stf->nbits = %d;\n", indent, tf.getLayout().getNumBits()));
         outs.write(String.format("%stf->bit_x = calloc(%d, sizeof(uint32_t));\n", indent, tf.getLayout().getNumBits()));
         outs.write(String.format("%stf->bit_y = calloc(%d, sizeof(uint32_t));\n", indent, tf.getLayout().getNumBits()));
@@ -77,7 +81,6 @@ public class TagToC
         outs.write(String.format("\n"));
         outs.write(String.format("void tag%s%dh%d_destroy(apriltag_family_t *tf)\n", tf.getLayout().getName(), tf.getLayout().getNumBits(), tf.minimumHammingDistance));
         outs.write(String.format("{\n"));
-        outs.write(String.format("%sfree(tf->codes);\n", indent));
         outs.write(String.format("%sfree(tf->bit_x);\n", indent));
         outs.write(String.format("%sfree(tf->bit_y);\n", indent));
         outs.write(String.format("%sfree(tf->name);\n", indent));
