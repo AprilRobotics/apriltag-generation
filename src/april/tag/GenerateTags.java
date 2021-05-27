@@ -33,14 +33,22 @@ import java.io.IOException;
 public class GenerateTags {
     public static void main(String args[])
     {
-        if (args.length != 2) {
-            System.out.printf("Usage: <tagclass> <outputdir>\n");
+        if (args.length < 2 || args.length > 3) {
+            System.out.printf("Usage: <tagclass> <outputdir> [<scalefactor>]\n");
             System.out.printf("Example: april.tag.Tag25h11 /tmp/tag25h11\n");
             return;
         }
 
         String cls = args[0];
         String dirpath = args[1] + "/";
+        int scaleFactor = 1;
+        if (args.length > 2) {
+            scaleFactor = Integer.parseInt(args[2]);
+            if (scaleFactor < 1) {
+                System.err.println("Scale factor must be greater or equals 1");
+                return;
+            }
+        }
 
         TagFamily tagFamily = (TagFamily) april.util.ReflectUtil.createObject(cls);
         if (tagFamily == null) {
@@ -56,7 +64,7 @@ public class GenerateTags {
                 f.mkdirs();
 
             renderer.writeAllImagesMosaic(dirpath+"mosaic.png");
-            renderer.writeAllImages(dirpath, tagFamily.getFilePrefix());
+            renderer.writeAllImages(dirpath, tagFamily.getFilePrefix(), scaleFactor);
             renderer.writeAllImagesPostScript(dirpath+"alltags.ps");
         } catch (IOException ex) {
             System.out.println("ex: "+ex);

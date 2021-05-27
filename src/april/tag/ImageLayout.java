@@ -167,14 +167,15 @@ public class ImageLayout {
         return im2;
     }
 
-    public BufferedImage renderToImage(long code) {
+    public BufferedImage renderToImage(long code, int scaleFactor) {
         int[][] imageData = renderToArray(code);
+        int scaledSize = size * scaleFactor;
 
-        BufferedImage im = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
+        BufferedImage im = new BufferedImage(scaledSize, scaledSize, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < scaledSize; y++) {
+            for (int x = 0; x < scaledSize; x++) {
                 int value;
-                switch(imageData[y][x]) {
+                switch(imageData[y / scaleFactor][x / scaleFactor]) {
                     case 0:
                         value = BLACK;
                         break;
