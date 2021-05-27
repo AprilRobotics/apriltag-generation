@@ -22,7 +22,7 @@ With x the size of the tag (in pixels). The smaller is x, the faster the generat
 You will have as output into the terminal a string, starting from "package april.tag;" and ending at the end of the terminal.
 This string is your new code that will be use for generating your markers. Save it into a .java file (ex : TagStandard20h9.java), into src/april/tag.
 
-Then, executes : 
+Then, execute : 
 
 ~~~ 
 ant
