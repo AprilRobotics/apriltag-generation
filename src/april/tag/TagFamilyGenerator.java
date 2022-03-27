@@ -556,19 +556,7 @@ public class TagFamilyGenerator
 
     public static final boolean hammingDistanceAtLeast(long a, long b, int minval)
     {
-        long w = a^b;
-
-        int count = 0;
-
-        while (w != 0) {
-            count += popCountTable[(int) (w&(popCountTable.length-1))];
-            if (count >= minval)
-                return true;
-
-            w >>= popCountTableShift;
-        }
-
-        return false;
+        return popCountReal(a^b) >= minval;
     }
 
     /** How many bits are set in the long? **/
