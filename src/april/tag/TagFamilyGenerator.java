@@ -105,11 +105,6 @@ public class TagFamilyGenerator
 
     boolean isCodePartiallyOkay(long v, long nRotCodesPartial)
     {
-        // tag must be reasonably complex
-        if (!isComplexEnough(v)) {
-            return false;
-        }
-
         // The tag must be different from itself when rotated.
         long rv1 = TagFamily.rotate90(v, nbits);
         long rv2 = TagFamily.rotate90(rv1, nbits);
@@ -134,6 +129,10 @@ public class TagFamilyGenerator
             }
         }
 
+        // tag must be reasonably complex
+        if (!isComplexEnough(v)) {
+            return false;
+        }
         return true;
     }
 
